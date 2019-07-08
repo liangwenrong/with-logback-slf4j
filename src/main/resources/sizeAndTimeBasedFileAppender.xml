@@ -1,0 +1,22 @@
+<included>
+    <appender name="sizeTimeFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 只要日志级别高于等于门槛级别，此过滤器就放行 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <!-- SizeAndTimeBasedRollingPolicy是同时结合时间和文件大小来滚动的策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--注意！！标注aux的%d参数只做使用,与按天滚动策略无任何关系，这里按月分目录保存-->
+            <FileNamePattern>${catalina.base}\logs\%d{yyyy-MM, aux}\console.%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <!--貌似是保存近90天的日志文件-->
+            <maxHistory>90</maxHistory>
+            <!--所有文件总共1GB封顶-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level : %msg%n%caller{1}</pattern>
+            <!-- <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %C.%M():%L - %m%n</pattern> -->
+        </encoder>
+    </appender>
+</included>

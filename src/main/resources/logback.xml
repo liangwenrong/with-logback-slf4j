@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="5 seconds">
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%-5level：级别从左显示5个字符宽度，%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level : %msg%n%caller{1}</pattern>
+            <!-- <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %C.%M():%L - %m%n</pattern> -->
+        </encoder>
+    </appender>
+
+    <!-- 引入输出到文件的appender（项目大的时候，建议合并到logback.xml中）-->
+    <include resource="timeBasedFileAppender.xml"/>
+    <include resource="sizeBasedFileAppender.xml"/>
+    <include resource="sizeAndTimeBasedFileAppender.xml"/>
+
+    <!--这个logger没有指定appender，自己不输出，但是也没指定additivity="false"，它会传递给parent输出-->
+    <!-- com.lwr包路径下的所有logger打印的信息都是info级别以上，即使root设置了off -->
+    <logger name="com.lwr" level="info"/>
+
+    <!--由于这个logger自动继承了root的appender，root中已经有stdout的appender了，自己这边又引入了STDOUT的appender-->
+    <!--如果没有设置 additivity="false" ,就会导致一条日志在控制台输出两次的情况-->
+    <!--additivity表示要不要使用rootLogger配置的appender进行输出-->
+    <logger name="com.cn" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    
+    <root level="all">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="timeFile"/>
+        <appender-ref ref="sizeFile"/>
+        <appender-ref ref="sizeTimeFile"/>
+    </root>
+</configuration>
